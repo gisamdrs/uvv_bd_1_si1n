@@ -8,25 +8,7 @@ CREATE TABLE cargos (
                 salario_maximo DECIMAL(8,2),
                 PRIMARY KEY (id_cargo)
 );
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('AD_PRES','President',20080,40000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('AD_VP','Administration Vice President',15000,30000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('AD_ASST','Administration Assistant',3000,6000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('FI_MGR','Finance Manager',8200,16000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('FI_ACCOUNT','Accountant',4200,9000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('AC_MGR','Accounting Manager',8200,16000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('AC_ACCOUNT','Public Accountant',4200,9000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('SA_MAN','Sales Manager',10000,20080);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('SA_REP','Sales Representative',6000,12008);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('PU_MAN','Purchasing Manager',8000,15000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('PU_CLERK','Purchasing Clerk',2500,5500);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('ST_MAN','Stock Manager',5500,8500);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('ST_CLERK','Stock Clerk',2008,5000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('SH_CLERK','Shipping Clerk',2500,5500);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('IT_PROG','Programmer',4000,10000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('MK_MAN','Marketing Manager',9000,15000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('MK_REP','Marketing Representative',4000,9000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('HR_REP','Human Resources Representative',4000,9000);
-Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('PR_REP','Public Relations Representative',4500,10500);
+
 
 ALTER TABLE cargos COMMENT 'Tabela cargos, que armazena os cargos existentes e a faixa salarial (mínimo
 e máximo) para cada cargo.';
@@ -56,6 +38,177 @@ CREATE TABLE empregados (
                 id_supervisor INT NOT NULL,
                 PRIMARY KEY (id_empregado)
 );
+
+ALTER TABLE empregados COMMENT 'Tabela que contém as informações dos empregados.';
+
+ALTER TABLE empregados MODIFY COLUMN id_empregado INTEGER COMMENT 'Chave primária da tabela.';
+
+ALTER TABLE empregados MODIFY COLUMN nome VARCHAR(75) COMMENT 'Nome completo do empregado.';
+
+ALTER TABLE empregados MODIFY COLUMN email VARCHAR(35) COMMENT 'Parte inicial do email do empregado (antes do @).';
+
+ALTER TABLE empregados MODIFY COLUMN telefone VARCHAR(20) COMMENT 'Telefone do empregado.';
+
+ALTER TABLE empregados MODIFY COLUMN salario DECIMAL(8, 2) COMMENT 'Salário mensal atual do empregado.';
+
+ALTER TABLE empregados MODIFY COLUMN comissao DECIMAL(4, 2) COMMENT 'Porcentagem de comissão de um empregado.';
+
+ALTER TABLE empregados MODIFY COLUMN id_departamento INTEGER COMMENT 'Chave estrangeira para a tabela de departamentos.';
+
+ALTER TABLE empregados MODIFY COLUMN id_cargo VARCHAR(10) COMMENT 'Chave estrangeira para a tabela cargos.';
+
+
+CREATE UNIQUE INDEX empregados_idx
+ ON empregados
+ ( email );
+
+CREATE TABLE id_regioes (
+                id_regiao INT NOT NULL,
+                nome VARCHAR(25) NOT NULL,
+                PRIMARY KEY (id_regiao)
+);
+
+
+
+ALTER TABLE id_regioes COMMENT 'Tabela regiões. Contém os números e nomes das regiões.';
+
+ALTER TABLE id_regioes MODIFY COLUMN id_regiao INTEGER COMMENT 'Chave primária da tabela regiões.';
+
+ALTER TABLE id_regioes MODIFY COLUMN nome VARCHAR(25) COMMENT 'Nomes das regiões.';
+
+
+CREATE UNIQUE INDEX id_regioes_idx
+ ON id_regioes
+ ( nome );
+
+CREATE TABLE paises (
+                id_pais CHAR(2) NOT NULL,
+                nome VARCHAR(50) NOT NULL,
+                id_regiao INT NOT NULL,
+                PRIMARY KEY (id_pais)
+);
+
+
+ALTER TABLE paises COMMENT 'Tabela com as informaçõs dos países.';
+
+ALTER TABLE paises MODIFY COLUMN id_pais CHAR(2) COMMENT 'Chave primária da tabela países.';
+
+ALTER TABLE paises MODIFY COLUMN nome VARCHAR(50) COMMENT 'Nome do país.';
+
+ALTER TABLE paises MODIFY COLUMN id_regiao INTEGER COMMENT 'Chave estrangeira para a tabela de regiões.';
+
+
+CREATE UNIQUE INDEX paises_idx
+ ON paises
+ ( nome );
+
+CREATE TABLE localizacoes (
+                id_localizacao INT NOT NULL,
+                endereco VARCHAR(50),
+                cep VARCHAR(12),
+                cidade VARCHAR(50),
+                uf VARCHAR(25),
+                id_pais CHAR(2) NOT NULL,
+                PRIMARY KEY (id_localizacao)
+);
+
+
+ALTER TABLE localizacoes COMMENT 'Tabela localizaçõs. Contém os endereços de diversos escritórios e facilidades
+da empresa. Não armazena endereços de clientes.';
+
+ALTER TABLE localizacoes MODIFY COLUMN id_localizacao INTEGER COMMENT 'Chave primária da tabela.';
+
+ALTER TABLE localizacoes MODIFY COLUMN endereco VARCHAR(50) COMMENT 'logradouro,número de um escritório ou facilidade da empresa.';
+
+ALTER TABLE localizacoes MODIFY COLUMN cep VARCHAR(12) COMMENT 'CEP da localização de escritório ou facilidade da empresa.';
+
+ALTER TABLE localizacoes MODIFY COLUMN cidade VARCHAR(50) COMMENT 'Cidade onde está o escritório ou facilidade da empresa.';
+
+ALTER TABLE localizacoes MODIFY COLUMN uf VARCHAR(25) COMMENT 'Estado onde está o escritório ou facilidade da empresa.';
+
+ALTER TABLE localizacoes MODIFY COLUMN id_pais CHAR(2) COMMENT 'Chave estrangeira para a tabela de países.';
+
+
+CREATE TABLE departamentos (
+                id_departamento INT NOT NULL,
+                nome VARCHAR(50),
+                id_localizacao INT NOT NULL,
+                id_gerente INT,
+                PRIMARY KEY (id_departamento)
+);
+
+
+ALTER TABLE departamentos COMMENT 'Tabela com as informações sobre os departamentos da empresa.';
+
+ALTER TABLE departamentos MODIFY COLUMN id_departamento INTEGER COMMENT 'Chave primária da tabela.';
+
+ALTER TABLE departamentos MODIFY COLUMN nome VARCHAR(50) COMMENT 'Nome do departamento da tabela.';
+
+ALTER TABLE departamentos MODIFY COLUMN id_localizacao INTEGER COMMENT 'Chave estrangeira para a tabela de empregados.';
+
+ALTER TABLE departamentos MODIFY COLUMN id_gerente INTEGER COMMENT 'Chave estrangeira para a tabela de localizações.';
+
+
+CREATE UNIQUE INDEX departamentos_idx
+ ON departamentos
+ ( nome );
+
+CREATE TABLE historico_cargos (
+                data_inicial DATE NOT NULL,
+                id_empregado INT NOT NULL,
+                data_final DATE NOT NULL,
+                id_cargo VARCHAR(10) NOT NULL,
+                id_departamento INT NOT NULL,
+                PRIMARY KEY (data_inicial, id_empregado)
+);
+
+
+ALTER TABLE historico_cargos COMMENT 'Tabela que armazena o histórico de cargos de um empregado. Se um empregado
+mudar de departamento dentro de um cargo ou mudar de cargo dentro de um
+departamento, novas linhas devem ser inseridas nesta tabela com a informação
+antiga do empregado.';
+
+ALTER TABLE historico_cargos MODIFY COLUMN data_inicial DATE COMMENT 'Parte da chave primária composta da tabela.';
+
+ALTER TABLE historico_cargos MODIFY COLUMN id_empregado INTEGER COMMENT 'Parte da chave primária composta da tabela.';
+
+ALTER TABLE historico_cargos MODIFY COLUMN data_final DATE COMMENT 'Último dia de um empregado neste cargo.';
+
+ALTER TABLE historico_cargos MODIFY COLUMN id_departamento INTEGER COMMENT 'Chave estrangeira para a tabela de departamentos.';
+
+
+CREATE TABLE empregado_departamento (
+                id_departamento INT NOT NULL,
+                id_empregados INT NOT NULL,
+                PRIMARY KEY (id_departamento, id_empregados)
+);
+
+ALTER TABLE empregado_departamento COMMENT 'Tabela intermediária da relação entre empregados e departamentos.';
+
+ALTER TABLE empregado_departamento MODIFY COLUMN id_departamento INTEGER COMMENT 'Chave estrangeira para a tabela departamentos.';
+
+ALTER TABLE empregado_departamento MODIFY COLUMN id_empregados INTEGER COMMENT 'Chave primária da tabela.';
+
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('AD_PRES','President',20080,40000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('AD_VP','Administration Vice President',15000,30000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('AD_ASST','Administration Assistant',3000,6000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('FI_MGR','Finance Manager',8200,16000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('FI_ACCOUNT','Accountant',4200,9000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('AC_MGR','Accounting Manager',8200,16000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('AC_ACCOUNT','Public Accountant',4200,9000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('SA_MAN','Sales Manager',10000,20080);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('SA_REP','Sales Representative',6000,12008);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('PU_MAN','Purchasing Manager',8000,15000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('PU_CLERK','Purchasing Clerk',2500,5500);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('ST_MAN','Stock Manager',5500,8500);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('ST_CLERK','Stock Clerk',2008,5000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('SH_CLERK','Shipping Clerk',2500,5500);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('IT_PROG','Programmer',4000,10000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('MK_MAN','Marketing Manager',9000,15000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('MK_REP','Marketing Representative',4000,9000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('HR_REP','Human Resources Representative',4000,9000);
+Insert into cargos (id_cargo, cargo, salario_minimo, salario_maximo) values ('PR_REP','Public Relations Representative',4500,10500);
+
 INSERT INTO empregados (id_empregado, nome, email,
 telefone, id_cargo, salario,
 comissao, id_supervisor, id_departamento) VALUES
@@ -484,203 +637,7 @@ INSERT INTO empregados (id_empregado, nome, email,
 telefone, id_cargo, salario,
 comissao, id_supervisor, id_departamento) VALUES
 (206, 'William Gietz', 'WGIETZ', '515.123.8181',  'AC_ACCOUNT', 8300, null, 205, 110);
-ALTER TABLE empregados COMMENT 'Tabela que contém as informações dos empregados.';
 
-ALTER TABLE empregados MODIFY COLUMN id_empregado INTEGER COMMENT 'Chave primária da tabela.';
-
-ALTER TABLE empregados MODIFY COLUMN nome VARCHAR(75) COMMENT 'Nome completo do empregado.';
-
-ALTER TABLE empregados MODIFY COLUMN email VARCHAR(35) COMMENT 'Parte inicial do email do empregado (antes do @).';
-
-ALTER TABLE empregados MODIFY COLUMN telefone VARCHAR(20) COMMENT 'Telefone do empregado.';
-
-ALTER TABLE empregados MODIFY COLUMN salario DECIMAL(8, 2) COMMENT 'Salário mensal atual do empregado.';
-
-ALTER TABLE empregados MODIFY COLUMN comissao DECIMAL(4, 2) COMMENT 'Porcentagem de comissão de um empregado.';
-
-ALTER TABLE empregados MODIFY COLUMN id_departamento INTEGER COMMENT 'Chave estrangeira para a tabela de departamentos.';
-
-ALTER TABLE empregados MODIFY COLUMN id_cargo VARCHAR(10) COMMENT 'Chave estrangeira para a tabela cargos.';
-
-
-CREATE UNIQUE INDEX empregados_idx
- ON empregados
- ( email );
-
-CREATE TABLE id_regioes (
-                id_regiao INT NOT NULL,
-                nome VARCHAR(25) NOT NULL,
-                PRIMARY KEY (id_regiao)
-);
-Insert into id_regioes (id_regiao, nome) values (1,'Europe');
-Insert into id_regioes (id_regiao, nome) values (2,'Americas');
-Insert into id_regioes (id_regiao, nome) values (3,'Asia');
-Insert into id_regioes (id_regiao, nome) values (4,'Middle East and Africa');
-
-
-ALTER TABLE id_regioes COMMENT 'Tabela regiões. Contém os números e nomes das regiões.';
-
-ALTER TABLE id_regioes MODIFY COLUMN id_regiao INTEGER COMMENT 'Chave primária da tabela regiões.';
-
-ALTER TABLE id_regioes MODIFY COLUMN nome VARCHAR(25) COMMENT 'Nomes das regiões.';
-
-
-CREATE UNIQUE INDEX id_regioes_idx
- ON id_regioes
- ( nome );
-
-CREATE TABLE paises (
-                id_pais CHAR(2) NOT NULL,
-                nome VARCHAR(50) NOT NULL,
-                id_regiao INT NOT NULL,
-                PRIMARY KEY (id_pais)
-);
-Insert into paises (id_pais, nome, id_regiao) values ('AR','Argentina',2);
-Insert into paises (id_pais, nome, id_regiao) values ('AU','Australia',3);
-Insert into paises (id_pais, nome, id_regiao) values ('BE','Belgium',1);
-Insert into paises (id_pais, nome, id_regiao) values ('BR','Brazil',2);
-Insert into paises (id_pais, nome, id_regiao) values ('CA','Canada',2);
-Insert into paises (id_pais, nome, id_regiao) values ('CH','Switzerland',1); 
-Insert into paises (id_pais, nome, id_regiao) values ('CN','China',3); 
-Insert into paises (id_pais, nome, id_regiao) values ('DK','Denmark',1);
-Insert into paises (id_pais, nome, id_regiao) values ('EG','Egypt',4);
-Insert into paises (id_pais, nome, id_regiao) values ('FR','France',1);
-Insert into paises (id_pais, nome, id_regiao) values ('IL','Israel',4);
-Insert into paises (id_pais, nome, id_regiao) values ('IN','India',3);
-Insert into paises (id_pais, nome, id_regiao) values ('IT','Italy',1);
-Insert into paises (id_pais, nome, id_regiao) values ('JP','Japan',3);
-Insert into paises (id_pais, nome, id_regiao) values ('KW','Kuwait',4);
-Insert into paises (id_pais, nome, id_regiao) values ('ML','Malaysia',3);
-Insert into paises (id_pais, nome, id_regiao) values ('MX','Mexico',2);
-Insert into paises (id_pais, nome, id_regiao) values ('NG','Nigeria',4);
-Insert into paises (id_pais, nome, id_regiao) values ('NL','Netherlands',1);
-Insert into paises (id_pais, nome, id_regiao) values ('SG','Singapore',3);
-Insert into paises (id_pais, nome, id_regiao) values ('UK','United Kingdom',1);
-Insert into paises (id_pais, nome, id_regiao) values ('US','United States of America',2);
-Insert into paises (id_pais, nome, id_regiao) values ('ZM','Zambia',4);
-Insert into paises (id_pais, nome, id_regiao) values ('ZW','Zimbabwe',4);
-
-ALTER TABLE paises COMMENT 'Tabela com as informaçõs dos países.';
-
-ALTER TABLE paises MODIFY COLUMN id_pais CHAR(2) COMMENT 'Chave primária da tabela países.';
-
-ALTER TABLE paises MODIFY COLUMN nome VARCHAR(50) COMMENT 'Nome do país.';
-
-ALTER TABLE paises MODIFY COLUMN id_regiao INTEGER COMMENT 'Chave estrangeira para a tabela de regiões.';
-
-
-CREATE UNIQUE INDEX paises_idx
- ON paises
- ( nome );
-
-CREATE TABLE localizacoes (
-                id_localizacao INT NOT NULL,
-                endereco VARCHAR(50),
-                cep VARCHAR(12),
-                cidade VARCHAR(50),
-                uf VARCHAR(25),
-                id_pais CHAR(2) NOT NULL,
-                PRIMARY KEY (id_localizacao)
-);
-
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1000,'1297 Via Cola di Rie','00989','Roma',null,'IT');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1100,'93091 Calle della Testa','10934','Venice',null,'IT');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1200,'2017 Shinjuku-ku','1689','Tokyo','Tokyo Prefecture','JP');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1300,'9450 Kamiya-cho','6823','Hiroshima',null,'JP');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1400,'2014 Jabberwocky Rd','26192','Southlake','Texas','US');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1500,'2011 Interiors Blvd','99236','South San Francisco','California','US');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1600,'2007 Zagora St','50090','South Brunswick','New Jersey','US');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1700,'2004 Charade Rd','98199','Seattle','Washington','US');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1800,'147 Spadina Ave','M5V 2L7','Toronto','Ontario','CA');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1900,'6092 Boxwood St','YSW 9T2','Whitehorse','Yukon','CA');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2000,'40-5-12 Laogianggen','190518','Beijing',null,'CN');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2100,'1298 Vileparle (E)','490231','Bombay','Maharashtra','IN');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2200,'12-98 Victoria Street','2901','Sydney','New South Wales','AU');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2300,'198 Clementi North','540198','Singapore',null,'SG');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2400,'8204 Arthur St',null,'London',null,'UK');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2500,'Magdalen Centre, The Oxford Science Park','OX9 9ZB','Oxford','Oxford','UK');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2600,'9702 Chester Road','09629850293','Stretford','Manchester','UK');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2700,'Schwanthalerstr. 7031','80925','Munich','Bavaria','DK');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2800,'Rua Frei Caneca 1360 ','01307-002','Sao Paulo','Sao Paulo','BR');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2900,'20 Rue des Corps-Saints','1730','Geneva','Geneve','CH');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (3000,'Murtenstrasse 921','3095','Bern','BE','CH');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (3100,'Pieter Breughelstraat 837','3029SK','Utrecht','Utrecht','NL');
-Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (3200,'Mariano Escobedo 9991','11932','Mexico City','Distrito Federal,','MX');
-
-ALTER TABLE localizacoes COMMENT 'Tabela localizaçõs. Contém os endereços de diversos escritórios e facilidades
-da empresa. Não armazena endereços de clientes.';
-
-ALTER TABLE localizacoes MODIFY COLUMN id_localizacao INTEGER COMMENT 'Chave primária da tabela.';
-
-ALTER TABLE localizacoes MODIFY COLUMN endereco VARCHAR(50) COMMENT 'logradouro,número de um escritório ou facilidade da empresa.';
-
-ALTER TABLE localizacoes MODIFY COLUMN cep VARCHAR(12) COMMENT 'CEP da localização de escritório ou facilidade da empresa.';
-
-ALTER TABLE localizacoes MODIFY COLUMN cidade VARCHAR(50) COMMENT 'Cidade onde está o escritório ou facilidade da empresa.';
-
-ALTER TABLE localizacoes MODIFY COLUMN uf VARCHAR(25) COMMENT 'Estado onde está o escritório ou facilidade da empresa.';
-
-ALTER TABLE localizacoes MODIFY COLUMN id_pais CHAR(2) COMMENT 'Chave estrangeira para a tabela de países.';
-
-
-CREATE TABLE departamentos (
-                id_departamento INT NOT NULL,
-                nome VARCHAR(50),
-                id_localizacao INT NOT NULL,
-                id_gerente INT,
-                PRIMARY KEY (id_departamento)
-);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (10,'Administration',200,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (20,'Marketing',201,1800);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (30,'Purchasing',114,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (40,'Human Resources',203,2400);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (50,'Shipping',121,1500);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (60,'IT',103,1400);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (70,'Public Relations',204,2700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (80,'Sales',145,2500);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (90,'Executive',100,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (100,'Finance',108,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (110,'Accounting',205,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (120,'Treasury',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (130,'Corporate Tax',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (140,'Control And Credit',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (150,'Shareholder Services',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (160,'Benefits',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (170,'Manufacturing',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (180,'Construction',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (190,'Contracting',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (200,'Operations',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (210,'IT Support',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (220,'NOC',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (230,'IT Helpdesk',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (240,'Government Sales',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (250,'Retail Sales',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (260,'Recruiting',null,1700);
-Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (270,'Payroll',null,1700);
-
-ALTER TABLE departamentos COMMENT 'Tabela com as informações sobre os departamentos da empresa.';
-
-ALTER TABLE departamentos MODIFY COLUMN id_departamento INTEGER COMMENT 'Chave primária da tabela.';
-
-ALTER TABLE departamentos MODIFY COLUMN nome VARCHAR(50) COMMENT 'Nome do departamento da tabela.';
-
-ALTER TABLE departamentos MODIFY COLUMN id_localizacao INTEGER COMMENT 'Chave estrangeira para a tabela de empregados.';
-
-ALTER TABLE departamentos MODIFY COLUMN id_gerente INTEGER COMMENT 'Chave estrangeira para a tabela de localizações.';
-
-
-CREATE UNIQUE INDEX departamentos_idx
- ON departamentos
- ( nome );
-
-CREATE TABLE historico_cargos (
-                data_inicial DATE NOT NULL,
-                id_empregado INT NOT NULL,
-                data_final DATE NOT NULL,
-                id_cargo VARCHAR(10) NOT NULL,
-                id_departamento INT NOT NULL,
-                PRIMARY KEY (data_inicial, id_empregado)
-);
 insert into historico_cargos (id_empregado, data_inicial, data_final, id_cargo, id_departamento) values
 ( 102, '2001-01-13','2006-07-24', 'IT_PROG',60
 );
@@ -711,33 +668,88 @@ insert into historico_cargos (id_empregado, data_inicial, data_final, id_cargo, 
 insert into historico_cargos (id_empregado, data_inicial, data_final, id_cargo, id_departamento) values
 ( 200, '2002-07-01','2006-12-31', 'AC_ACCOUNT', 90
 );
+Insert into paises (id_pais, nome, id_regiao) values ('AR','Argentina',2);
+Insert into paises (id_pais, nome, id_regiao) values ('AU','Australia',3);
+Insert into paises (id_pais, nome, id_regiao) values ('BE','Belgium',1);
+Insert into paises (id_pais, nome, id_regiao) values ('BR','Brazil',2);
+Insert into paises (id_pais, nome, id_regiao) values ('CA','Canada',2);
+Insert into paises (id_pais, nome, id_regiao) values ('CH','Switzerland',1); 
+Insert into paises (id_pais, nome, id_regiao) values ('CN','China',3); 
+Insert into paises (id_pais, nome, id_regiao) values ('DK','Denmark',1);
+Insert into paises (id_pais, nome, id_regiao) values ('EG','Egypt',4);
+Insert into paises (id_pais, nome, id_regiao) values ('FR','France',1);
+Insert into paises (id_pais, nome, id_regiao) values ('IL','Israel',4);
+Insert into paises (id_pais, nome, id_regiao) values ('IN','India',3);
+Insert into paises (id_pais, nome, id_regiao) values ('IT','Italy',1);
+Insert into paises (id_pais, nome, id_regiao) values ('JP','Japan',3);
+Insert into paises (id_pais, nome, id_regiao) values ('KW','Kuwait',4);
+Insert into paises (id_pais, nome, id_regiao) values ('ML','Malaysia',3);
+Insert into paises (id_pais, nome, id_regiao) values ('MX','Mexico',2);
+Insert into paises (id_pais, nome, id_regiao) values ('NG','Nigeria',4);
+Insert into paises (id_pais, nome, id_regiao) values ('NL','Netherlands',1);
+Insert into paises (id_pais, nome, id_regiao) values ('SG','Singapore',3);
+Insert into paises (id_pais, nome, id_regiao) values ('UK','United Kingdom',1);
+Insert into paises (id_pais, nome, id_regiao) values ('US','United States of America',2);
+Insert into paises (id_pais, nome, id_regiao) values ('ZM','Zambia',4);
+Insert into paises (id_pais, nome, id_regiao) values ('ZW','Zimbabwe',4);
 
-ALTER TABLE historico_cargos COMMENT 'Tabela que armazena o histórico de cargos de um empregado. Se um empregado
-mudar de departamento dentro de um cargo ou mudar de cargo dentro de um
-departamento, novas linhas devem ser inseridas nesta tabela com a informação
-antiga do empregado.';
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1000,'1297 Via Cola di Rie','00989','Roma',null,'IT');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1100,'93091 Calle della Testa','10934','Venice',null,'IT');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1200,'2017 Shinjuku-ku','1689','Tokyo','Tokyo Prefecture','JP');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1300,'9450 Kamiya-cho','6823','Hiroshima',null,'JP');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1400,'2014 Jabberwocky Rd','26192','Southlake','Texas','US');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1500,'2011 Interiors Blvd','99236','South San Francisco','California','US');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1600,'2007 Zagora St','50090','South Brunswick','New Jersey','US');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1700,'2004 Charade Rd','98199','Seattle','Washington','US');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1800,'147 Spadina Ave','M5V 2L7','Toronto','Ontario','CA');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (1900,'6092 Boxwood St','YSW 9T2','Whitehorse','Yukon','CA');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2000,'40-5-12 Laogianggen','190518','Beijing',null,'CN');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2100,'1298 Vileparle (E)','490231','Bombay','Maharashtra','IN');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2200,'12-98 Victoria Street','2901','Sydney','New South Wales','AU');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2300,'198 Clementi North','540198','Singapore',null,'SG');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2400,'8204 Arthur St',null,'London',null,'UK');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2500,'Magdalen Centre, The Oxford Science Park','OX9 9ZB','Oxford','Oxford','UK');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2600,'9702 Chester Road','09629850293','Stretford','Manchester','UK');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2700,'Schwanthalerstr. 7031','80925','Munich','Bavaria','DK');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2800,'Rua Frei Caneca 1360 ','01307-002','Sao Paulo','Sao Paulo','BR');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (2900,'20 Rue des Corps-Saints','1730','Geneva','Geneve','CH');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (3000,'Murtenstrasse 921','3095','Bern','BE','CH');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (3100,'Pieter Breughelstraat 837','3029SK','Utrecht','Utrecht','NL');
+Insert into localizacoes (id_localizacao. endereco, cep, cidade, uf, id_pais) values (3200,'Mariano Escobedo 9991','11932','Mexico City','Distrito Federal,','MX');
 
-ALTER TABLE historico_cargos MODIFY COLUMN data_inicial DATE COMMENT 'Parte da chave primária composta da tabela.';
 
-ALTER TABLE historico_cargos MODIFY COLUMN id_empregado INTEGER COMMENT 'Parte da chave primária composta da tabela.';
+Insert into id_regioes (id_regiao, nome) values (1,'Europe');
+Insert into id_regioes (id_regiao, nome) values (2,'Americas');
+Insert into id_regioes (id_regiao, nome) values (3,'Asia');
+Insert into id_regioes (id_regiao, nome) values (4,'Middle East and Africa');
 
-ALTER TABLE historico_cargos MODIFY COLUMN data_final DATE COMMENT 'Último dia de um empregado neste cargo.';
-
-ALTER TABLE historico_cargos MODIFY COLUMN id_departamento INTEGER COMMENT 'Chave estrangeira para a tabela de departamentos.';
-
-
-CREATE TABLE empregado_departamento (
-                id_departamento INT NOT NULL,
-                id_empregados INT NOT NULL,
-                PRIMARY KEY (id_departamento, id_empregados)
-);
-
-ALTER TABLE empregado_departamento COMMENT 'Tabela intermediária da relação entre empregados e departamentos.';
-
-ALTER TABLE empregado_departamento MODIFY COLUMN id_departamento INTEGER COMMENT 'Chave estrangeira para a tabela departamentos.';
-
-ALTER TABLE empregado_departamento MODIFY COLUMN id_empregados INTEGER COMMENT 'Chave primária da tabela.';
-
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (10,'Administration',200,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (20,'Marketing',201,1800);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (30,'Purchasing',114,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (40,'Human Resources',203,2400);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (50,'Shipping',121,1500);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (60,'IT',103,1400);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (70,'Public Relations',204,2700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (80,'Sales',145,2500);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (90,'Executive',100,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (100,'Finance',108,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (110,'Accounting',205,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (120,'Treasury',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (130,'Corporate Tax',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (140,'Control And Credit',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (150,'Shareholder Services',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (160,'Benefits',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (170,'Manufacturing',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (180,'Construction',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (190,'Contracting',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (200,'Operations',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (210,'IT Support',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (220,'NOC',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (230,'IT Helpdesk',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (240,'Government Sales',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (250,'Retail Sales',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (260,'Recruiting',null,1700);
+Insert into departamentos (id_departamento, nome, id_localizacao, id_gerente) values (270,'Payroll',null,1700);
 
 ALTER TABLE empregados ADD CONSTRAINT cargos_empregados_fk
 FOREIGN KEY (id_cargo)
